@@ -20,6 +20,33 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Authentication API
+
+Authentication screens use TanStack Form and the shared shadcn UI components. Set
+`NEXT_PUBLIC_API_URL` to the backend origin (for example,
+`http://localhost:5000`). Auth requests use the `/api/v1/auth` prefix exposed by
+the Express router:
+
+| Method | Path | Request |
+| --- | --- | --- |
+| `POST` | `/api/v1/auth/register` | `{ "name", "email", "password" }` |
+| `POST` | `/api/v1/auth/login` | `{ "email", "password" }` |
+| `POST` | `/api/v1/auth/forget-password` | `{ "email" }` |
+| `POST` | `/api/v1/auth/reset-password` | `{ "token", "password" }` |
+| `POST` | `/api/v1/auth/verify-email` | `{ "email", "otp" }` (6-digit string) |
+| `GET` | `/api/v1/auth/me` | Authenticated user |
+| `POST` | `/api/v1/auth/refresh-token` | Refresh the session |
+| `POST` | `/api/v1/auth/google` | Google ID token in `credential`, `idToken`, and `token` |
+
+The backend should set refresh credentials using an HttpOnly cookie. Login and
+refresh responses may also include an `accessToken` (or `token`) and an optional
+`user` object for in-memory Bearer authentication. `/auth/me` should return the
+user object directly or as `{ "user": { "email": "..." } }`. The reset email
+should link to `/reset-password?token=...`. Set `NEXT_PUBLIC_GOOGLE_CLIENT_ID`
+to your Google OAuth client ID to enable the Google Identity Services button.
+For cookie-based sessions, configure the backend to allow credentialed CORS from
+the frontend origin.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

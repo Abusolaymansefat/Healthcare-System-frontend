@@ -13,18 +13,18 @@ const accountLinks = [
 
 export default function Footer() {
   return (
-    <footer className="relative mt-20 overflow-hidden bg-slate-950 text-slate-300">
+    <footer className="relative mt-20 overflow-hidden border-t border-slate-200 bg-slate-50 text-slate-700 transition-colors duration-300 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300">
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-teal-400/70 to-transparent"
+        className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-teal-500/60 to-transparent dark:via-teal-400/70"
       />
 
       <div className="mx-auto max-w-7xl px-4 pb-8 pt-14 sm:px-6 sm:pt-16 lg:px-8">
-        <div className="grid gap-12 border-b border-white/10 pb-12 md:grid-cols-[1.4fr_0.7fr_0.7fr] md:gap-16">
+        <div className="grid gap-12 border-b border-slate-200 pb-12 dark:border-white/10 md:grid-cols-[1.4fr_0.7fr_0.7fr] md:gap-16">
           <div className="max-w-md">
             <Link
               aria-label="Healthcare System home"
-              className="inline-flex items-center gap-3 text-white"
+              className="inline-flex items-center gap-3 text-slate-950 dark:text-white"
               href="/"
             >
               <span className="flex size-11 items-center justify-center rounded-2xl bg-teal-600 text-white">
@@ -34,12 +34,12 @@ export default function Footer() {
                 Healthcare System
               </span>
             </Link>
-            <p className="mt-5 max-w-sm text-sm leading-7 text-slate-400">
+            <p className="mt-5 max-w-sm text-sm leading-7 text-slate-600 dark:text-slate-400">
               A connected care experience designed to make it easier for
               patients and healthcare professionals to take the next step.
             </p>
             <Link
-              className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-teal-300 transition hover:text-white"
+              className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-teal-700 transition hover:text-teal-900 dark:text-teal-300 dark:hover:text-white"
               href="/register"
             >
               Join the platform
@@ -48,12 +48,12 @@ export default function Footer() {
           </div>
 
           <nav aria-label="Explore" className="flex flex-col items-start gap-4">
-            <h2 className="mb-1 text-xs font-bold uppercase tracking-[0.18em] text-white">
+            <h2 className="mb-1 text-xs font-bold uppercase tracking-[0.18em] text-slate-900 dark:text-white">
               Explore
             </h2>
             {exploreLinks.map((link) => (
               <Link
-                className="text-sm text-slate-400 transition hover:text-teal-300"
+                className="text-sm text-slate-600 transition hover:text-teal-800 dark:text-slate-400 dark:hover:text-teal-300"
                 href={link.path}
                 key={link.path}
               >
@@ -66,12 +66,12 @@ export default function Footer() {
             aria-label="Your account"
             className="flex flex-col items-start gap-4"
           >
-            <h2 className="mb-1 text-xs font-bold uppercase tracking-[0.18em] text-white">
+            <h2 className="mb-1 text-xs font-bold uppercase tracking-[0.18em] text-slate-900 dark:text-white">
               Your account
             </h2>
             {accountLinks.map((link) => (
               <Link
-                className="text-sm text-slate-400 transition hover:text-teal-300"
+                className="text-sm text-slate-600 transition hover:text-teal-800 dark:text-slate-400 dark:hover:text-teal-300"
                 href={link.path}
                 key={link.path}
               >
@@ -81,7 +81,7 @@ export default function Footer() {
           </nav>
         </div>
 
-        <div className="flex flex-col gap-3 pt-6 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 pt-6 text-xs text-slate-500 dark:text-slate-500 sm:flex-row sm:items-center sm:justify-between">
           <p>© Healthcare System. All rights reserved.</p>
           <p>Care that keeps everyone connected.</p>
         </div>

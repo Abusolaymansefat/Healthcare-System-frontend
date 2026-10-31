@@ -16,7 +16,7 @@ const principles = [
 export default function AboutUs() {
   return (
     <main>
-      <section className="relative isolate overflow-hidden bg-gradient-to-br from-teal-950 via-teal-900 to-cyan-950 text-white">
+      <section className="relative isolate overflow-hidden bg-gradient-to-br from-teal-950 via-teal-900 to-cyan-950 text-white dark:from-black dark:via-slate-950 dark:to-teal-950">
         <div
           aria-hidden="true"
           className="absolute -right-36 -top-48 -z-10 size-[34rem] rounded-full border border-white/10"
@@ -81,13 +81,15 @@ export default function AboutUs() {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-        <div className="grid gap-8 rounded-3xl border border-slate-100 bg-white p-6 shadow-sm sm:grid-cols-3 sm:p-8">
+        <div className="grid gap-8 rounded-3xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:grid-cols-3 sm:p-8">
           {principles.map(({ icon: Icon, label }) => (
             <div className="flex items-center gap-4" key={label}>
-              <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-teal-50 text-teal-700">
+              <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-teal-50 text-teal-700 dark:bg-teal-950 dark:text-teal-300">
                 <Icon aria-hidden="true" className="size-5" />
               </span>
-              <p className="text-sm font-semibold text-slate-800">{label}</p>
+              <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
+                {label}
+              </p>
             </div>
           ))}
         </div>

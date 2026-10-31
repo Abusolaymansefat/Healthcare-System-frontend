@@ -1,14 +1,17 @@
 import { ArrowRight, HeartPulse, Menu, ShieldCheck } from "lucide-react";
 import Link from "next/link";
+import AuthActions from "./AuthActions";
+import ThemeToggle from "./ThemeToggle";
 
 const routes = [
   { name: "Home", path: "/" },
   { name: "About us", path: "/about-us" },
+  { name: "dashboard", path: "/dashboard" },
 ];
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/95">
       <div className="bg-teal-800 text-white">
         <div className="mx-auto flex max-w-7xl items-center justify-center gap-2 px-4 py-2 text-center text-xs font-medium sm:text-sm">
           <ShieldCheck
@@ -31,7 +34,7 @@ export default function Header() {
             <HeartPulse aria-hidden="true" className="size-6" />
           </span>
           <span className="min-w-0">
-            <span className="block truncate text-base font-bold tracking-tight text-slate-900 sm:text-lg">
+            <span className="block truncate text-base font-bold tracking-tight text-slate-900 dark:text-white sm:text-lg">
               Healthcare System
             </span>
             <span className="hidden text-[10px] font-semibold uppercase tracking-[0.18em] text-teal-700 sm:block">
@@ -46,7 +49,7 @@ export default function Header() {
         >
           {routes.map((route) => (
             <Link
-              className="text-sm font-semibold text-slate-600 transition-colors hover:text-teal-700"
+              className="text-sm font-semibold text-slate-600 transition-colors hover:text-teal-700 dark:text-slate-300 dark:hover:text-teal-300"
               href={route.path}
               key={route.path}
             >
@@ -56,12 +59,8 @@ export default function Header() {
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
-          <Link
-            className="rounded-full px-4 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-100 hover:text-teal-800"
-            href="/login"
-          >
-            Sign in
-          </Link>
+          <ThemeToggle />
+          <AuthActions />
           <Link
             className="inline-flex items-center gap-2 rounded-full bg-teal-700 px-5 py-3 text-sm font-semibold text-white shadow-md shadow-teal-900/15 transition hover:bg-teal-800"
             href="/register"
@@ -71,41 +70,39 @@ export default function Header() {
           </Link>
         </div>
 
-        <details className="group relative md:hidden">
-          <summary
-            aria-label="Open navigation menu"
-            className="flex size-11 cursor-pointer list-none items-center justify-center rounded-xl border border-slate-200 text-slate-700 transition hover:bg-slate-50 [&::-webkit-details-marker]:hidden"
-          >
-            <Menu aria-hidden="true" className="size-5" />
-          </summary>
-          <div className="absolute right-0 top-[calc(100%+0.75rem)] z-50 w-64 rounded-2xl border border-slate-200 bg-white p-3 shadow-xl shadow-slate-900/10">
-            <nav aria-label="Mobile navigation" className="flex flex-col">
-              {routes.map((route) => (
+        <div className="flex items-center gap-2 md:hidden">
+          <ThemeToggle />
+          <details className="group relative">
+            <summary
+              aria-label="Open navigation menu"
+              className="flex size-11 cursor-pointer list-none items-center justify-center rounded-xl border border-slate-200 text-slate-700 transition hover:bg-slate-50 [&::-webkit-details-marker]:hidden dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+            >
+              <Menu aria-hidden="true" className="size-5" />
+            </summary>
+            <div className="absolute right-0 top-[calc(100%+0.75rem)] z-50 w-64 rounded-2xl border border-slate-200 bg-white p-3 shadow-xl shadow-slate-900/10 dark:border-slate-700 dark:bg-slate-900 dark:shadow-black/30">
+              <nav aria-label="Mobile navigation" className="flex flex-col">
+                {routes.map((route) => (
+                  <Link
+                    className="rounded-xl px-3 py-3 text-sm font-semibold text-slate-700 transition hover:bg-teal-50 hover:text-teal-800 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-teal-300"
+                    href={route.path}
+                    key={route.path}
+                  >
+                    {route.name}
+                  </Link>
+                ))}
+                <div className="my-2 border-t border-slate-100 dark:border-slate-700" />
+                <AuthActions mobile />
                 <Link
-                  className="rounded-xl px-3 py-3 text-sm font-semibold text-slate-700 transition hover:bg-teal-50 hover:text-teal-800"
-                  href={route.path}
-                  key={route.path}
+                  className="mt-1 inline-flex items-center justify-center gap-2 rounded-xl bg-teal-700 px-4 py-3 text-sm font-semibold text-white transition hover:bg-teal-800"
+                  href="/register"
                 >
-                  {route.name}
+                  Get started
+                  <ArrowRight aria-hidden="true" className="size-4" />
                 </Link>
-              ))}
-              <div className="my-2 border-t border-slate-100" />
-              <Link
-                className="rounded-xl px-3 py-3 text-sm font-semibold text-slate-700 transition hover:bg-teal-50 hover:text-teal-800"
-                href="/login"
-              >
-                Sign in
-              </Link>
-              <Link
-                className="mt-1 inline-flex items-center justify-center gap-2 rounded-xl bg-teal-700 px-4 py-3 text-sm font-semibold text-white transition hover:bg-teal-800"
-                href="/register"
-              >
-                Get started
-                <ArrowRight aria-hidden="true" className="size-4" />
-              </Link>
-            </nav>
-          </div>
-        </details>
+              </nav>
+            </div>
+          </details>
+        </div>
       </div>
     </header>
   );
