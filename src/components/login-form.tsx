@@ -17,6 +17,11 @@ import { AuthCard, AuthNotice } from "@/components/auth/AuthCard";
 import { AuthInput } from "@/components/auth/AuthInput";
 import { Button } from "@/components/ui/button";
 import { FieldGroup } from "@/components/ui/field";
+import {
+  authEmailSchema,
+  getSchemaError,
+  loginPasswordSchema,
+} from "@/validation/auth";
 
 type GoogleCredentialResponse = {
   credential: string;
@@ -180,14 +185,8 @@ export function LoginForm() {
           <form.Field
             name="email"
             validators={{
-              onBlur: ({ value }) =>
-                !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
-                  ? "Enter a valid email address."
-                  : undefined,
-              onSubmit: ({ value }) =>
-                !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
-                  ? "Enter a valid email address."
-                  : undefined,
+              onBlur: ({ value }) => getSchemaError(authEmailSchema, value),
+              onSubmit: ({ value }) => getSchemaError(authEmailSchema, value),
             }}
           >
             {(field) => (
@@ -206,10 +205,9 @@ export function LoginForm() {
           <form.Field
             name="password"
             validators={{
-              onBlur: ({ value }) =>
-                value.length === 0 ? "Enter your password." : undefined,
+              onBlur: ({ value }) => getSchemaError(loginPasswordSchema, value),
               onSubmit: ({ value }) =>
-                value.length === 0 ? "Enter your password." : undefined,
+                getSchemaError(loginPasswordSchema, value),
             }}
           >
             {(field) => (

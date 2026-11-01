@@ -31,8 +31,8 @@ the Express router:
 | --- | --- | --- |
 | `POST` | `/api/v1/auth/register` | `{ "name", "email", "password" }` |
 | `POST` | `/api/v1/auth/login` | `{ "email", "password" }` |
-| `POST` | `/api/v1/auth/forget-password` | `{ "email" }` |
-| `POST` | `/api/v1/auth/reset-password` | `{ "token", "password" }` |
+| `POST` | `/api/v1/auth/forget-password` | `{ "email" }` (sends a password reset OTP) |
+| `POST` | `/api/v1/auth/reset-password` | `{ "email", "otp", "newPassword" }` |
 | `POST` | `/api/v1/auth/verify-email` | `{ "email", "otp" }` (6-digit string) |
 | `GET` | `/api/v1/auth/me` | Authenticated user |
 | `POST` | `/api/v1/auth/refresh-token` | Refresh the session |
@@ -41,8 +41,8 @@ the Express router:
 The backend should set refresh credentials using an HttpOnly cookie. Login and
 refresh responses may also include an `accessToken` (or `token`) and an optional
 `user` object for in-memory Bearer authentication. `/auth/me` should return the
-user object directly or as `{ "user": { "email": "..." } }`. The reset email
-should link to `/reset-password?token=...`. Set `NEXT_PUBLIC_GOOGLE_CLIENT_ID`
+user object directly or as `{ "user": { "email": "..." } }`. After requesting a
+password reset OTP, users can enter it at `/reset-password?email=...`. Set `NEXT_PUBLIC_GOOGLE_CLIENT_ID`
 to your Google OAuth client ID to enable the Google Identity Services button.
 For cookie-based sessions, configure the backend to allow credentialed CORS from
 the frontend origin.

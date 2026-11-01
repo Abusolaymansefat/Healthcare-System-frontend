@@ -9,6 +9,11 @@ import { AuthCard, AuthNotice } from "@/components/auth/AuthCard";
 import { AuthInput } from "@/components/auth/AuthInput";
 import { Button } from "@/components/ui/button";
 import { FieldGroup } from "@/components/ui/field";
+import {
+  authEmailSchema,
+  authOtpSchema,
+  getSchemaError,
+} from "@/validation/auth";
 
 export default function VerifyEmailForm({ email = "" }: { email?: string }) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -69,14 +74,8 @@ export default function VerifyEmailForm({ email = "" }: { email?: string }) {
           <form.Field
             name="email"
             validators={{
-              onBlur: ({ value }) =>
-                !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
-                  ? "Enter a valid email address."
-                  : undefined,
-              onSubmit: ({ value }) =>
-                !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
-                  ? "Enter a valid email address."
-                  : undefined,
+              onBlur: ({ value }) => getSchemaError(authEmailSchema, value),
+              onSubmit: ({ value }) => getSchemaError(authEmailSchema, value),
             }}
           >
             {(field) => (
@@ -95,14 +94,8 @@ export default function VerifyEmailForm({ email = "" }: { email?: string }) {
           <form.Field
             name="otp"
             validators={{
-              onBlur: ({ value }) =>
-                !/^\d{6}$/.test(value.trim())
-                  ? "Enter the 6-digit verification code."
-                  : undefined,
-              onSubmit: ({ value }) =>
-                !/^\d{6}$/.test(value.trim())
-                  ? "Enter the 6-digit verification code."
-                  : undefined,
+              onBlur: ({ value }) => getSchemaError(authOtpSchema, value),
+              onSubmit: ({ value }) => getSchemaError(authOtpSchema, value),
             }}
           >
             {(field) => (

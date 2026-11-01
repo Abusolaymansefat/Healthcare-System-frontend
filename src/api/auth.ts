@@ -84,17 +84,22 @@ export async function register(input: RegisterInput) {
 export async function requestPasswordReset(email: string) {
   return apiClient<MessageResponse>(`${AUTH_API_PREFIX}/forget-password`, {
     method: "POST",
-    body: { email },
+    body: { email: email.trim() },
   });
 }
 
 export async function resetPassword(input: {
-  token: string;
+  email: string;
+  otp: string;
   password: string;
 }) {
   return apiClient<MessageResponse>(`${AUTH_API_PREFIX}/reset-password`, {
     method: "POST",
-    body: input,
+    body: {
+      email: input.email.trim(),
+      otp: input.otp.trim(),
+      newPassword: input.password,
+    },
   });
 }
 

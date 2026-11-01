@@ -2,13 +2,13 @@ import { Suspense } from "react";
 import ResetPasswordForm from "@/components/auth/ResetPasswordForm";
 
 type ResetPasswordPageProps = {
-  searchParams: Promise<{ token?: string | string[] }>;
+  searchParams: Promise<{ email?: string | string[] }>;
 };
 
 async function ResetPasswordContent({ searchParams }: ResetPasswordPageProps) {
-  const { token } = await searchParams;
+  const { email } = await searchParams;
 
-  return <ResetPasswordForm token={Array.isArray(token) ? token[0] : token} />;
+  return <ResetPasswordForm email={Array.isArray(email) ? email[0] : email} />;
 }
 
 export default function ResetPasswordPage(props: ResetPasswordPageProps) {

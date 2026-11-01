@@ -10,6 +10,12 @@ import { AuthCard, AuthNotice } from "@/components/auth/AuthCard";
 import { AuthInput } from "@/components/auth/AuthInput";
 import { Button } from "@/components/ui/button";
 import { FieldGroup } from "@/components/ui/field";
+import {
+  authEmailSchema,
+  authNameSchema,
+  authPasswordSchema,
+  getSchemaError,
+} from "@/validation/auth";
 
 export default function RegisterForm() {
   const router = useRouter();
@@ -59,14 +65,8 @@ export default function RegisterForm() {
           <form.Field
             name="name"
             validators={{
-              onBlur: ({ value }) =>
-                value.trim().length < 2
-                  ? "Name must be at least 2 characters."
-                  : undefined,
-              onSubmit: ({ value }) =>
-                value.trim().length < 2
-                  ? "Name must be at least 2 characters."
-                  : undefined,
+              onBlur: ({ value }) => getSchemaError(authNameSchema, value),
+              onSubmit: ({ value }) => getSchemaError(authNameSchema, value),
             }}
           >
             {(field) => (
@@ -84,14 +84,8 @@ export default function RegisterForm() {
           <form.Field
             name="email"
             validators={{
-              onBlur: ({ value }) =>
-                !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
-                  ? "Enter a valid email address."
-                  : undefined,
-              onSubmit: ({ value }) =>
-                !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
-                  ? "Enter a valid email address."
-                  : undefined,
+              onBlur: ({ value }) => getSchemaError(authEmailSchema, value),
+              onSubmit: ({ value }) => getSchemaError(authEmailSchema, value),
             }}
           >
             {(field) => (
@@ -110,14 +104,9 @@ export default function RegisterForm() {
           <form.Field
             name="password"
             validators={{
-              onBlur: ({ value }) =>
-                value.length < 8
-                  ? "Password must be at least 8 characters."
-                  : undefined,
+              onBlur: ({ value }) => getSchemaError(authPasswordSchema, value),
               onSubmit: ({ value }) =>
-                value.length < 8
-                  ? "Password must be at least 8 characters."
-                  : undefined,
+                getSchemaError(authPasswordSchema, value),
             }}
           >
             {(field) => (
