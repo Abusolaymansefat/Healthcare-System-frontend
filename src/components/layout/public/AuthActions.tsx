@@ -1,16 +1,14 @@
 "use client";
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getAuthErrorMessage } from "@/api/auth";
-import { authQueryKeys, currentUserQuery } from "@/api/auth-query";
-import { clearAuthSession } from "@/lib/auth-token";
+import { useCurrentUser, useSignOut } from "@/hooks/auth";
 
 export default function AuthActions({ mobile = false }: { mobile?: boolean }) {
-  const queryClient = useQueryClient();
   const router = useRouter();
-  const { data: user, error, isError, isPending } = useQuery(currentUserQuery);
+  const signOut = useSignOut();
+  const { data: user, error, isError, isPending } = useCurrentUser();
 
   if (isPending) {
     return <span aria-hidden="true" className="size-10" />;
@@ -40,9 +38,8 @@ export default function AuthActions({ mobile = false }: { mobile?: boolean }) {
     );
   }
 
-  function signOut() {
-    clearAuthSession();
-    queryClient.setQueryData(authQueryKeys.me, null);
+  function handleSignOut() {
+    signOut();
     router.replace("/login");
   }
 
@@ -53,7 +50,7 @@ export default function AuthActions({ mobile = false }: { mobile?: boolean }) {
           ? "rounded-xl px-3 py-3 text-left text-sm font-semibold text-slate-700 transition hover:bg-red-50 hover:text-red-700 dark:text-slate-200 dark:hover:bg-red-950/40 dark:hover:text-red-300"
           : "rounded-full px-4 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-red-50 hover:text-red-700 dark:text-slate-200 dark:hover:bg-red-950/40 dark:hover:text-red-300"
       }
-      onClick={signOut}
+      onClick={handleSignOut}
       type="button"
     >
       Sign out

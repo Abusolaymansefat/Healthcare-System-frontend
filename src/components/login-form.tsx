@@ -1,22 +1,16 @@
 "use client";
 
 import { useForm } from "@tanstack/react-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Script from "next/script";
 import { useEffect, useRef, useState } from "react";
-import {
-  getAuthErrorMessage,
-  getAuthUser,
-  login,
-  loginWithGoogle,
-} from "@/api/auth";
-import { authQueryKeys, currentUserQuery } from "@/api/auth-query";
+import { getAuthErrorMessage } from "@/api/auth";
 import { AuthCard, AuthNotice } from "@/components/auth/AuthCard";
 import { AuthInput } from "@/components/auth/AuthInput";
 import { Button } from "@/components/ui/button";
 import { FieldGroup } from "@/components/ui/field";
+import { useGoogleLogin, useLogin } from "@/hooks/auth";
 import {
   authEmailSchema,
   getSchemaError,
@@ -31,21 +25,6 @@ type GoogleCredentialHandler = (credential: string) => Promise<void>;
 
 let activeGoogleCredentialHandler: GoogleCredentialHandler | null = null;
 let initializedGoogleClientId: string | null = null;
-
-async function loadSignedInUser(
-  queryClient: ReturnType<typeof useQueryClient>,
-) {
-  const user = await queryClient.fetchQuery({
-    ...currentUserQuery,
-    staleTime: 0,
-  });
-
-  if (!user) {
-    throw new Error("Signed in, but the user profile could not be loaded.");
-  }
-
-  queryClient.setQueryData(authQueryKeys.me, user);
-}
 
 declare global {
   interface Window {
@@ -74,12 +53,11 @@ declare global {
 
 export function LoginForm() {
   const router = useRouter();
-  const queryClient = useQueryClient();
   const googleButtonRef = useRef<HTMLDivElement>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [googleScriptLoaded, setGoogleScriptLoaded] = useState(false);
-  const loginMutation = useMutation({ mutationFn: login });
-  const googleLoginMutation = useMutation({ mutationFn: loginWithGoogle });
+  const loginMutation = useLogin();
+  const googleLoginMutation = useGoogleLogin();
   const googleSignIn = googleLoginMutation.mutateAsync;
   const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 
@@ -96,13 +74,7 @@ export function LoginForm() {
     ) => {
       setErrorMessage(null);
       try {
-        const response = await googleSignIn(credential);
-        const user = getAuthUser(response);
-        if (user) {
-          queryClient.setQueryData(authQueryKeys.me, user);
-        } else {
-          await loadSignedInUser(queryClient);
-        }
+        await googleSignIn(credential);
         router.replace("/");
       } catch (error) {
         setErrorMessage(getAuthErrorMessage(error));
@@ -134,20 +106,14 @@ export function LoginForm() {
         activeGoogleCredentialHandler = null;
       }
     };
-  }, [googleClientId, googleSignIn, googleScriptLoaded, queryClient, router]);
+  }, [googleClientId, googleSignIn, googleScriptLoaded, router]);
 
   const form = useForm({
     defaultValues: { email: "", password: "" },
     onSubmit: async ({ value }) => {
       setErrorMessage(null);
       try {
-        const response = await loginMutation.mutateAsync(value);
-        const user = getAuthUser(response);
-        if (user) {
-          queryClient.setQueryData(authQueryKeys.me, user);
-        } else {
-          await loadSignedInUser(queryClient);
-        }
+        await loginMutation.mutateAsync(value);
         router.replace("/");
       } catch (error) {
         setErrorMessage(getAuthErrorMessage(error));

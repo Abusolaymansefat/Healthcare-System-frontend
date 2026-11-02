@@ -5,7 +5,7 @@ import {
   setAccessToken,
 } from "@/lib/auth-token";
 
-const AUTH_API_PREFIX = "/api/v1/auth";
+const AUTH_API_PREFIX = "/auth";
 
 export type AuthUser = {
   id?: string;

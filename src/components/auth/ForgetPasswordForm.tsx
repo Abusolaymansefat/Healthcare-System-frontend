@@ -1,42 +1,41 @@
 "use client";
 
 import { useForm } from "@tanstack/react-form";
-import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
-import { useCallback, useState } from "react";
-import { getAuthErrorMessage, requestPasswordReset } from "@/api/auth";
+import { useState } from "react";
+import { getAuthErrorMessage } from "@/api/auth";
 import { AuthCard } from "@/components/auth/AuthCard";
 import { AuthInput } from "@/components/auth/AuthInput";
-import { AuthToast } from "@/components/auth/AuthToast";
 import { Button } from "@/components/ui/button";
 import { FieldGroup } from "@/components/ui/field";
+import { toast } from "@/components/ui/toast";
+import { useRequestPasswordReset } from "@/hooks/auth";
 import { authEmailSchema, getSchemaError } from "@/validation/auth";
 
 export default function ForgetPasswordForm() {
-  const [toast, setToast] = useState<{
-    message: string;
-    variant: "error" | "success";
-  } | null>(null);
   const [resetEmail, setResetEmail] = useState<string | null>(null);
-  const mutation = useMutation({ mutationFn: requestPasswordReset });
-  const dismissToast = useCallback(() => setToast(null), []);
+  const mutation = useRequestPasswordReset();
 
   const form = useForm({
     defaultValues: { email: "" },
     onSubmit: async ({ value }) => {
-      setToast(null);
       setResetEmail(null);
       try {
         const response = await mutation.mutateAsync(value.email);
         setResetEmail(value.email.trim());
-        setToast({
-          message:
+        toast.create({
+          title: "Success",
+          description:
             response.message ??
             "A password reset OTP has been sent to your email.",
-          variant: "success",
+          type: "success",
         });
       } catch (error) {
-        setToast({ message: getAuthErrorMessage(error), variant: "error" });
+        toast.create({
+          title: "Error",
+          description: getAuthErrorMessage(error),
+          type: "error",
+        });
       }
     },
   });
@@ -54,13 +53,6 @@ export default function ForgetPasswordForm() {
       }
       title="Forgot your password?"
     >
-      {toast ? (
-        <AuthToast
-          message={toast.message}
-          onDismiss={dismissToast}
-          variant={toast.variant}
-        />
-      ) : null}
       {resetEmail ? (
         <p className="mb-4 text-sm text-slate-600 dark:text-slate-300">
           Enter the OTP sent to your email.{" "}

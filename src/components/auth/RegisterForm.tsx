@@ -1,15 +1,15 @@
 "use client";
 
 import { useForm } from "@tanstack/react-form";
-import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { getAuthErrorMessage, register } from "@/api/auth";
+import { getAuthErrorMessage } from "@/api/auth";
 import { AuthCard, AuthNotice } from "@/components/auth/AuthCard";
 import { AuthInput } from "@/components/auth/AuthInput";
 import { Button } from "@/components/ui/button";
 import { FieldGroup } from "@/components/ui/field";
+import { useRegister } from "@/hooks/auth";
 import {
   authEmailSchema,
   authNameSchema,
@@ -20,7 +20,7 @@ import {
 export default function RegisterForm() {
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const registerMutation = useMutation({ mutationFn: register });
+  const registerMutation = useRegister();
 
   const form = useForm({
     defaultValues: { name: "", email: "", password: "" },

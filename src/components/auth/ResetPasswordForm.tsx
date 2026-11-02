@@ -1,19 +1,15 @@
 "use client";
 
 import { useForm } from "@tanstack/react-form";
-import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
-import { useCallback, useState } from "react";
-import {
-  getAuthErrorMessage,
-  requestPasswordReset,
-  resetPassword,
-} from "@/api/auth";
+import { useState } from "react";
+import { getAuthErrorMessage } from "@/api/auth";
 import { AuthCard, AuthNotice } from "@/components/auth/AuthCard";
 import { AuthInput } from "@/components/auth/AuthInput";
-import { AuthToast } from "@/components/auth/AuthToast";
 import { Button } from "@/components/ui/button";
 import { FieldGroup } from "@/components/ui/field";
+import { toast } from "@/components/ui/toast";
+import { useRequestPasswordReset, useResetPassword } from "@/hooks/auth";
 import {
   authEmailSchema,
   authOtpSchema,
@@ -23,25 +19,22 @@ import {
 
 export default function ResetPasswordForm({ email = "" }: { email?: string }) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [toast, setToast] = useState<{
-    message: string;
-  } | null>(null);
   const [isReset, setIsReset] = useState(false);
-  const resetMutation = useMutation({ mutationFn: resetPassword });
-  const resendMutation = useMutation({ mutationFn: requestPasswordReset });
-  const dismissToast = useCallback(() => setToast(null), []);
+  const resetMutation = useResetPassword();
+  const resendMutation = useRequestPasswordReset();
 
   const form = useForm({
     defaultValues: { email, otp: "", password: "" },
     onSubmit: async ({ value }) => {
       setErrorMessage(null);
-      setToast(null);
       setIsReset(false);
       try {
         const response = await resetMutation.mutateAsync(value);
         setIsReset(true);
-        setToast({
-          message: response.message ?? "Your password has been updated.",
+        toast.create({
+          title: "Success",
+          description: response.message ?? "Your password has been updated.",
+          type: "success",
         });
       } catch (error) {
         setErrorMessage(getAuthErrorMessage(error));
@@ -51,7 +44,6 @@ export default function ResetPasswordForm({ email = "" }: { email?: string }) {
 
   async function handleResendOtp() {
     setErrorMessage(null);
-    setToast(null);
     const currentEmail = form.getFieldValue("email");
     const emailError = getSchemaError(authEmailSchema, currentEmail);
     if (emailError) {
@@ -62,8 +54,11 @@ export default function ResetPasswordForm({ email = "" }: { email?: string }) {
     try {
       const response = await resendMutation.mutateAsync(currentEmail);
       form.setFieldValue("otp", "");
-      setToast({
-        message: response.message ?? "A new OTP has been sent to your email.",
+      toast.create({
+        title: "Success",
+        description:
+          response.message ?? "A new OTP has been sent to your email.",
+        type: "success",
       });
     } catch (error) {
       setErrorMessage(getAuthErrorMessage(error));
@@ -84,13 +79,6 @@ export default function ResetPasswordForm({ email = "" }: { email?: string }) {
       title="Set a new password"
     >
       {errorMessage ? <AuthNotice>{errorMessage}</AuthNotice> : null}
-      {toast ? (
-        <AuthToast
-          message={toast.message}
-          onDismiss={dismissToast}
-          variant="success"
-        />
-      ) : null}
       {isReset ? (
         <p className="mb-4 text-sm text-slate-600 dark:text-slate-300">
           Password updated.{" "}

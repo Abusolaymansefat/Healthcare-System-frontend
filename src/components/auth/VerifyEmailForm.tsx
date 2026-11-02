@@ -1,14 +1,14 @@
 "use client";
 
 import { useForm } from "@tanstack/react-form";
-import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
 import { useState } from "react";
-import { getAuthErrorMessage, verifyEmail } from "@/api/auth";
+import { getAuthErrorMessage } from "@/api/auth";
 import { AuthCard, AuthNotice } from "@/components/auth/AuthCard";
 import { AuthInput } from "@/components/auth/AuthInput";
 import { Button } from "@/components/ui/button";
 import { FieldGroup } from "@/components/ui/field";
+import { useVerifyEmail } from "@/hooks/auth";
 import {
   authEmailSchema,
   authOtpSchema,
@@ -18,7 +18,7 @@ import {
 export default function VerifyEmailForm({ email = "" }: { email?: string }) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const mutation = useMutation({ mutationFn: verifyEmail });
+  const mutation = useVerifyEmail();
 
   const form = useForm({
     defaultValues: { email, otp: "" },
